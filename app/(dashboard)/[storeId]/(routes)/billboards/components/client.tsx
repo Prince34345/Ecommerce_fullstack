@@ -18,7 +18,7 @@ export const BillBoardClient = () => {
                Add new
           </Button>
           </div>
-          <Separator/>
+          <Separator className='mt-4'/>
         </>
     )
 }

@@ -24,9 +24,9 @@ export function MainNav({
         },
         {
             Icon: ClipBoardIcon, 
-            href: `/${params.storeId}/billboard`,
+            href: `/${params.storeId}/billboards`,
             label: 'BillBoard',
-            active: pathname === `/${params.storeId}/billboard`,
+            active: pathname.startsWith(`/${params.storeId}/billboards`),
         },
         {
             Icon: Bolt, 
