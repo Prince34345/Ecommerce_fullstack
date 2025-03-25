@@ -15,8 +15,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { ApiAlert } from "@/components/ui/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
+import ImageUpload from "@/components/ui/image-upload";
 
 const formSchema = z.object({
   label: z.string().min(1),
@@ -55,11 +55,17 @@ export const BillBoardform: React.FC<BillBoardFormProps> = ({intialData}: BillBo
   const onSubmit = async (data: BillBoardFormValues) => {
       try {
           setLoading(true);
-          await axios.patch(`/api/stores/${params.storeId}`, data);
+          if (intialData) {
+              await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data); 
+          }else {
+              await axios.post(`/api/${params.storeId}/billboards`, data)
+          }
           router.refresh();
-          toast.success('Store Updated');
+          router.push(`/${params.storeId}/billboards`)
+          toast.success(toastMessage);
       }catch(error) {
-          toast.error('Something went wrong.');
+          toast.error('Smoething went wrong');
+          console.log(error);
       }finally {
           setLoading(false)
       }
@@ -67,12 +73,12 @@ export const BillBoardform: React.FC<BillBoardFormProps> = ({intialData}: BillBo
   const onDelete = async () => {
     try {
        setLoading(true);
-       await axios.delete(`/api/stores/${params.storeId}`);
+       await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
        router.refresh();
        router.push('/');
-       toast.success('Store Deleted.');
+       toast.success('Billboard deleted.');
     } catch (error) {
-        toast.error('Make sure you removie all product and categries.')
+        toast.error('Make sure you removed all categries. using this billboard first')
     } finally {
        setLoading(false);
        setOpen(false)
@@ -92,17 +98,25 @@ export const BillBoardform: React.FC<BillBoardFormProps> = ({intialData}: BillBo
     <Separator className="mt-3"/>
     <Form {...form} >
        <form className="space-y-8 w-full" onSubmit={form.handleSubmit(onSubmit)}>
-           <FormField control={form.control} name='imageUrl' render={({field}) => {
+       <div className="grid grid-cols-3 m-5">  
+         <FormField control={form.control} name='imageUrl' render={({field}) => {
                return <FormItem>
-                <FormLabel className="ml-2">
+                <FormLabel className="ml-1">
                      Background Image
                 </FormLabel>
-                <FormControl>
-                  <Input disabled={loading} placeholder="Billboard label" {...field}/>
-                </FormControl>
+                <div className="">
+               <ImageUpload 
+               value={field.value ? [field.value] : []}
+               disabled={loading}
+               onChange={(url) => field.onChange(url)}
+               onRemove={() => field.onChange('')}
+               />
+                </div>
+
                 <FormMessage/>
                </FormItem>
             }}/>
+          </div>
           <div className="grid grid-cols-3 m-5">
             <FormField control={form.control} name='label' render={({field}) => {
                return <FormItem>
