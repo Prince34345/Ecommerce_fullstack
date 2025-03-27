@@ -7,6 +7,7 @@ import { Plus } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { BillBoardColumn, columns } from './columns';
 import { DataTable } from '@/components/ui/data-table';
+import { ApiList } from '@/components/ui/api-list';
 
 interface BillBoardClientProps {
   data: BillBoardColumn[]
@@ -25,7 +26,11 @@ export const BillBoardClient: React.FC<BillBoardClientProps> = ({data}) => {
           </Button>
           </div>
           <Separator className='mt-4 mb-3'/>
-          <DataTable  columns={columns} data={data}/>
+          <DataTable searchKey='label' columns={columns} data={data}/>
+          <Heading title='API' description='API calls for BillBoards.'/>
+          <Separator className='mt-4'/>
+          <ApiList entityName='billboards' entityIdName='billboardId'/>
+           
         </>
     )
 }

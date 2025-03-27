@@ -29,7 +29,7 @@ export const ApiAlert : React.FC<ApiAlertProps> = ({title, description, variant=
         toast.success('API Route copied to the clipboard')
     }
     return (
-        <Alert>
+        <Alert className="my-5">
             <Server className="h-4 w-4"/>
             <AlertTitle className="flex items-center gap-x-2">
                 {title}

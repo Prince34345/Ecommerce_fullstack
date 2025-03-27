@@ -75,7 +75,7 @@ export const BillBoardform: React.FC<BillBoardFormProps> = ({intialData}: BillBo
        setLoading(true);
        await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
        router.refresh();
-       router.push('/');
+       router.push(`/${params.storeId}/billboards`);
        toast.success('Billboard deleted.');
     } catch (error) {
         toast.error('Make sure you removed all categries. using this billboard first')
