@@ -20,18 +20,20 @@ import ImageUpload from "@/components/ui/image-upload";
 
 const formSchema = z.object({
   name: z.string().min(1),
-  value: z.string().min(1)
+  value: z.string().min(4).regex(/^#/, {
+    message: 'String must be valid hex code.'
+  })
 })
 
-interface SizeFormProps {
+interface ColorFormProps {
     intialData: Size | null
 }
 
 
-type SizeFormValues = z.infer<typeof formSchema>;
+type ColorFormValues = z.infer<typeof formSchema>;
 
 
-export const SizeForm: React.FC<SizeFormProps> = ({intialData}: SizeFormProps) => {
+export const ColorForm: React.FC<ColorFormProps> = ({intialData}: ColorFormProps) => {
   const params = useParams()
   const router = useRouter();
   const origin = useOrigin();
@@ -39,12 +41,12 @@ export const SizeForm: React.FC<SizeFormProps> = ({intialData}: SizeFormProps) =
   const [ open, setOpen ] = useState(false) ;
   const [ loading, setLoading] = useState(false);
 
-  const title = intialData ? "Edit size" : 'Create size';
-  const description = intialData ? "Edit a size" : 'Add a new size';
-  const toastMessage = intialData ? 'size updated' : 'size Created';
+  const title = intialData ? "Edit Color" : 'Create Color';
+  const description = intialData ? "Edit a Color" : 'Add a new Color';
+  const toastMessage = intialData ? 'Color updated' : 'Color Created';
   const action = intialData ? 'Save Changes' : 'Create'
 
-  const form = useForm<SizeFormValues>({
+  const form = useForm<ColorFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: intialData || {
       name: '',
@@ -52,19 +54,19 @@ export const SizeForm: React.FC<SizeFormProps> = ({intialData}: SizeFormProps) =
     }
   })
 
-  const onSubmit = async (data: SizeFormValues) => {
+  const onSubmit = async (data: ColorFormValues) => {
       try {
           setLoading(true);
           if (intialData) {
-              await axios.patch(`/api/${params.storeId}/sizes/${params.sizeId}`, data); 
+              await axios.patch(`/api/${params.storeId}/colors/${params.colorId}`, data); 
           }else {
-              await axios.post(`/api/${params.storeId}/sizes`, data)
+              await axios.post(`/api/${params.storeId}/colors`, data)
           }
           router.refresh();
-          router.push(`/${params.storeId}/sizes`)
+          router.push(`/${params.storeId}/colors`)
           toast.success(toastMessage);
       }catch(error) {
-          toast.error('Smoething went wrong');
+          toast.error('Something went wrong');
           console.log(error);
       }finally {
           setLoading(false)
@@ -73,12 +75,12 @@ export const SizeForm: React.FC<SizeFormProps> = ({intialData}: SizeFormProps) =
   const onDelete = async () => {
     try {
        setLoading(true);
-       await axios.delete(`/api/${params.storeId}/sizes/${params.sizeId}`);
+       await axios.delete(`/api/${params.storeId}/colors/${params.colorId}`);
        router.refresh();
-       router.push(`/${params.storeId}/sizes`);
-       toast.success('Size deleted.');
+       router.push(`/${params.storeId}/colors`);
+       toast.success('Color deleted.');
     } catch (error) {
-        toast.error('Make sure you removed all product using this size first')
+        toast.error('Make sure you removed all product using this color first')
     } finally {
        setLoading(false);
        setOpen(false)
@@ -102,10 +104,10 @@ export const SizeForm: React.FC<SizeFormProps> = ({intialData}: SizeFormProps) =
             <FormField control={form.control} name='name' render={({field}) => {
                return <FormItem>
                 <FormLabel className="ml-2">
-                  Name
+                  Color
                 </FormLabel>
                 <FormControl>
-                  <Input disabled={loading} placeholder="Size Name" {...field}/>
+                  <Input disabled={loading} placeholder="Color Name" {...field}/>
                 </FormControl>
                 <FormMessage/>
                </FormItem>
@@ -116,7 +118,10 @@ export const SizeForm: React.FC<SizeFormProps> = ({intialData}: SizeFormProps) =
                   Value
                 </FormLabel>
                 <FormControl>
-                  <Input disabled={loading} placeholder="Size Value" {...field}/>
+                  <div className="flex items-center gap-x-2">
+                  <Input disabled={loading} placeholder="Color Value" {...field}/>
+                  <div className="border p-4 rounded-full" style={{backgroundColor: field.value}}/>
+                  </div>
                 </FormControl>
                 <FormMessage/>
                </FormItem>

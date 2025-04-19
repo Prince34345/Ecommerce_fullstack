@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils"
 import { useParams, usePathname } from "next/navigation";
-import { Clipboard as ClipBoardIcon, PaperclipIcon, LayoutList, Settings, SquareArrowOutUpRight }from "lucide-react";
+import { Clipboard as ClipBoardIcon, PaperclipIcon, LayoutList, Settings, SquareArrowOutUpRight, Palette }from "lucide-react";
 import {motion} from 'framer-motion'
 
 
@@ -32,6 +32,12 @@ export function MainNav({
             href: `/${params.storeId}/categories`,
             label: 'Categories',
             active: pathname.startsWith(`/${params.storeId}/categories`),
+        },
+        {
+            Icon: Palette, 
+            href: `/${params.storeId}/colors`,
+            label: 'Colors',
+            active: pathname.startsWith(`/${params.storeId}/colors`),
         },
         {
             Icon: SquareArrowOutUpRight, 
