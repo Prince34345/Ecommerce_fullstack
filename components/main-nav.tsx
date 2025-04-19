@@ -3,8 +3,8 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils"
 import { useParams, usePathname } from "next/navigation";
-import { Bolt, Clipboard as ClipBoardIcon, PaperclipIcon } from "lucide-react";
-import {motion, useAnimate} from 'framer-motion'
+import { Clipboard as ClipBoardIcon, PaperclipIcon, LayoutList, Settings, SquareArrowOutUpRight }from "lucide-react";
+import {motion} from 'framer-motion'
 
 
 export function MainNav({
@@ -14,7 +14,6 @@ export function MainNav({
     const pathname = usePathname();
     const params = useParams();
 
-    const [scope, animate] = useAnimate()
     const routes = [
         {
             Icon: PaperclipIcon, 
@@ -25,11 +24,23 @@ export function MainNav({
         {
             Icon: ClipBoardIcon, 
             href: `/${params.storeId}/billboards`,
-            label: 'BillBoard',
+            label: 'BillBoards',
             active: pathname.startsWith(`/${params.storeId}/billboards`),
         },
         {
-            Icon: Bolt, 
+            Icon: LayoutList, 
+            href: `/${params.storeId}/categories`,
+            label: 'Categories',
+            active: pathname.startsWith(`/${params.storeId}/categories`),
+        },
+        {
+            Icon: SquareArrowOutUpRight, 
+            href: `/${params.storeId}/sizes`,
+            label: 'Sizes',
+            active: pathname.startsWith(`/${params.storeId}/sizes`),
+        },
+        {
+            Icon: Settings, 
             href: `/${params.storeId}/settings`,
             label: 'Settings',
             active: pathname === `/${params.storeId}/settings`,
