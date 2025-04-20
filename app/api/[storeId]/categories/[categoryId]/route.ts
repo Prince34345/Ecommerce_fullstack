@@ -25,7 +25,7 @@ export async function GET(
 
 export async function PATCH(
     req: Request,
-    {params} : {params: {categoryId: string, storeId: string}}
+    {params} : {params: {storeId: string, categoryId: string}}
 ) {
      try {
            const {userId} = await auth();

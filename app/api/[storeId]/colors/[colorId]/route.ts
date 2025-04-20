@@ -4,16 +4,16 @@ import { NextResponse } from "next/server";
 
 export async function GET(
     req: Request,
-   {params} : {params: {colorsId: string}}
+   {params} : {params: {colorId: string}}
 ) {
     try {
-          if (!params.colorsId) {
+          if (!params.colorId) {
              return new NextResponse('Color Id is required', {status: 400})
           }
 
           const color = await prismadb.colors.findUnique({
               where: {
-                  id: params.colorsId,
+                  id: params.colorId,
               }
            })
            return NextResponse.json(color);
@@ -25,7 +25,7 @@ export async function GET(
 
 export async function PATCH(
     req: Request,
-    {params} : {params: {colorId: string, storeId: string}}
+    {params} : {params: {storeId: string, colorId: string}}
 ) {
      try {
            const {userId} = await auth();
