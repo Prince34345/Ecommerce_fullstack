@@ -1,7 +1,6 @@
 "use client";
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { BillBoardColumn } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Copy, Edit, MoreHorizontal, Trash2} from "lucide-react";
 import toast from "react-hot-toast";
@@ -9,9 +8,10 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
+import { ProductColumn } from "./columns";
 
 interface CellActionProps {
-    data: BillBoardColumn
+    data: ProductColumn
 
 }
 

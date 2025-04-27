@@ -5,31 +5,31 @@ import {Heading} from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import { Plus } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
-import { BillBoardColumn, columns } from './columns';
+import { ProductColumn, columns } from './columns';
 import { DataTable } from '@/components/ui/data-table';
 import { ApiList } from '@/components/ui/api-list';
 
-interface BillBoardClientProps {
-  data: BillBoardColumn[]
+interface ProductClientProps {
+  data: ProductColumn[]
 }
 
-export const BillBoardClient: React.FC<BillBoardClientProps> = ({data}) => {
+export const ProductClient: React.FC<ProductClientProps> = ({data}) => {
     const router = useRouter();
     const params = useParams();
     return (
         <>
           <div className="flex items-center justify-between">
-          <Heading title={`Billboards (${data.length})`} description='Manage billboards for your store'/>
-          <Button onClick={() => router.push(`/${params.storeId}/billboards/new`)}  className='p-3 bg-blue-400'>
+          <Heading title={`Products (${data.length})`} description='Manage products for your store'/>
+          <Button onClick={() => router.push(`/${params.storeId}/products/new`)}  className='p-3 bg-blue-400'>
                <Plus className='mr-2 h-4 w-4'/>
                Add new
           </Button>
           </div>
           <Separator className='mt-4 mb-3'/>
           <DataTable searchKey='label' columns={columns} data={data}/>
-          <Heading title='API' description='API calls for BillBoards.'/>
+          <Heading title='API' description='API calls for Products'/>
           <Separator className='mt-4'/>
-          <ApiList entityName='billboards' entityIdName='billboardId'/>
+          <ApiList entityName='products' entityIdName='productId'/>
            
         </>
     )
