@@ -16,22 +16,18 @@ interface ImageUploadProps {
 const ImageUpload: React.FC<ImageUploadProps> = ({
   disabled, onChange, onRemove, value
 }) => {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   const handleUploadComplete = useCallback((results: any) => {
-    const uploadedUrls = results?.info?.files?.map(file => file.uploadInfo.secure_url) || [];
+    console.log("handleUploadComplete", results)
+    const uploadedUrls = results?.info?.files?.map((file: any)=> file.uploadInfo.secure_url) || [];
 
     const merged = Array.from(new Set([...value, ...uploadedUrls]));
+    console.log("merged", merged)
 
     const imageObjects = merged.map(url => ({ url }));
     onChange(imageObjects);
   }, [value, onChange]);
 
-  if (!isMounted) return null;
+  console.log("values", value)
 
   return (
     <div>
@@ -43,7 +39,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 <Trash className="h-4 w-4" />
               </Button>
             </div>
-            <Image fill alt="Image" className="object-cover" src={url} />
+           {typeof url == "string" && url.trim() !== "" && (<Image src={url} fill alt="Image" className="object-cover" />)}
           </div>
         ))}
       </div>

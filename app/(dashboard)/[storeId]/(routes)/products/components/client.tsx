@@ -8,6 +8,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { ProductColumn, columns } from './columns';
 import { DataTable } from '@/components/ui/data-table';
 import { ApiList } from '@/components/ui/api-list';
+import { useState } from 'react';
 
 interface ProductClientProps {
   data: ProductColumn[]
@@ -16,7 +17,7 @@ interface ProductClientProps {
 export const ProductClient: React.FC<ProductClientProps> = ({data}) => {
     const router = useRouter();
     const params = useParams();
-    return (
+     return (
         <>
           <div className="flex items-center justify-between">
           <Heading title={`Products (${data.length})`} description='Manage products for your store'/>
@@ -26,11 +27,10 @@ export const ProductClient: React.FC<ProductClientProps> = ({data}) => {
           </Button>
           </div>
           <Separator className='mt-4 mb-3'/>
-          <DataTable searchKey='label' columns={columns} data={data}/>
+          <DataTable searchKey='name' columns={columns} data={data}/>
           <Heading title='API' description='API calls for Products'/>
           <Separator className='mt-4'/>
           <ApiList entityName='products' entityIdName='productId'/>
-           
         </>
     )
 }

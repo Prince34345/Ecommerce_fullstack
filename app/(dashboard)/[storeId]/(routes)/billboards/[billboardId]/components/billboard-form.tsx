@@ -20,8 +20,8 @@ import ImageUpload from "@/components/ui/image-upload";
 
 const formSchema = z.object({
   label: z.string().min(1),
-  imageUrl: z.string().min(1)
-})
+  imageUrl: z.array(z.object({ url: z.string().min(1) })).min(1)
+});
 
 interface BillBoardFormProps {
     intialData: Billboard | null
@@ -34,7 +34,6 @@ type BillBoardFormValues = z.infer<typeof formSchema>;
 export const BillBoardform: React.FC<BillBoardFormProps> = ({intialData}: BillBoardFormProps) => {
   const params = useParams()
   const router = useRouter();
-  const origin = useOrigin();
 
   const [ open, setOpen ] = useState(false) ;
   const [ loading, setLoading] = useState(false);
@@ -46,19 +45,28 @@ export const BillBoardform: React.FC<BillBoardFormProps> = ({intialData}: BillBo
 
   const form = useForm<BillBoardFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: intialData || {
+    defaultValues: intialData ? {
+      label: intialData.label,
+      imageUrl: [{ url: intialData.imageUrl }],
+    } : {
       label: '',
-      imageUrl: ''
+      imageUrl: []
     }
+    
   })
 
   const onSubmit = async (data: BillBoardFormValues) => {
+      console.log("data of billboard",  data)
       try {
           setLoading(true);
+          const payload = {
+            label: data?.label,
+            imageUrl: data?.imageUrl[0]?.url
+          }
           if (intialData) {
-              await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data); 
+              await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, payload); 
           }else {
-              await axios.post(`/api/${params.storeId}/billboards`, data)
+              await axios.post(`/api/${params.storeId}/billboards`, payload)
           }
           router.refresh();
           router.push(`/${params.storeId}/billboards`)
@@ -105,12 +113,16 @@ export const BillBoardform: React.FC<BillBoardFormProps> = ({intialData}: BillBo
                      Background Image
                 </FormLabel>
                 <div className="">
-               <ImageUpload 
-               value={field.value ? [field.value] : []}
-               disabled={loading}
-               onChange={(url) => field.onChange(url)}
-               onRemove={() => field.onChange('')}
-               />
+                <ImageUpload
+          value={field.value.map((image) => image.url)}
+          disabled={loading}
+          onChange={(urls) => field.onChange(urls)}
+          onRemove={(url) =>
+            field.onChange([
+              ...field.value.filter((current) => current.url !== url),
+            ])
+          }
+        />
                 </div>
 
                 <FormMessage/>

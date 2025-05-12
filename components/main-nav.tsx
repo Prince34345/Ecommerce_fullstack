@@ -46,6 +46,11 @@ export function MainNav({
             active: pathname.startsWith(`/${params.storeId}/sizes`),
         },
         {
+            href: `/${params.storeId}/orders`,
+            label: 'Orders',
+            active: pathname.startsWith(`/${params.storeId}/orders`),
+        },
+        {
             href: `/${params.storeId}/settings`,
             label: 'Settings',
             active: pathname === `/${params.storeId}/settings`,

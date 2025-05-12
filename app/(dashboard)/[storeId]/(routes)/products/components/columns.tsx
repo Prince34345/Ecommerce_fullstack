@@ -19,7 +19,8 @@ export type ProductColumn = {
 export const columns: ColumnDef<ProductColumn>[] = [
     {
       accessorKey: 'name',
-      header: 'Name'
+      header: 'Name',
+      enableColumnFilter: true,
     },
     {
       accessorKey: "isArchived",
