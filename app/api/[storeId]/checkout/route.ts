@@ -11,10 +11,11 @@ const corsHeaders = {
 }
 
 export async function OPTIONS() {
-    return NextResponse.json({}, {headers: corsHeaders})
+       return NextResponse.json({}, {headers: corsHeaders});        
 }
 
 export async function POST(req: Request, {params}: {params: {storeId: string}}) {
+    
     const {productIds} = await req.json();
 
     if (!productIds || productIds.length === 0) {
@@ -30,18 +31,19 @@ export async function POST(req: Request, {params}: {params: {storeId: string}}) 
     })
 
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = []
-    products.forEach((product) => {
-        line_items.push({
-            quantity: 1,
-            price_data: {
-                currency: "USD",
-                product_data: {
-                    name: product.name
-                },
-                unit_amount: product.price.toNumber() * 100
-            }
-        })
-    })
+
+           products.forEach((product) => {
+               line_items.push({
+                   quantity: 1,
+                   price_data: {
+                       currency: "USD",
+                       product_data: {
+                           name: product.name
+                       },
+                       unit_amount: product.price.toNumber() * 100
+                   }
+               })
+           })
     const Order = await prismadb.order.create({
         data: {
             storeId: params.storeId,
@@ -64,8 +66,11 @@ export async function POST(req: Request, {params}: {params: {storeId: string}}) 
         phone_number_collection: {
             enabled: true
         },
-        success_url: `${process.env.FRONTEND_STORE_URL}/cart?success=1`,
-        cancel_url: `${process.env.FRONTEND_STORE_URL}/cart?success=1`
-
+        success_url: `${process.env.NEXT_PUBLIC_FRONTEND_STORE_URL!}/cart?success=1`,
+        cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_STORE_URL!}/cart?canceled=1`,
+        metadata: {
+            orderId: Order.id
+        }
     })
+    return NextResponse.json({url: session.url}, {headers: corsHeaders})
 }
