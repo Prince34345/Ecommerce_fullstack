@@ -15,7 +15,6 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { useOrigin } from "@/hooks/use-origin";
 import { Select, SelectContent, SelectValue, SelectTrigger, SelectItem } from "@/components/ui/select";
 
 const formSchema = z.object({
@@ -78,7 +77,8 @@ export const Categoryform: React.FC<CategoryFormProps> = ({intialData, billboard
        router.push(`/${params.storeId}/categories`);
        toast.success('Category deleted.');
     } catch (error) {
-        toast.error('Make sure you removed all categries using this category first')
+        console.log(error)
+        toast.error('Make sure you removed all categries using this category first'); 
     } finally {
        setLoading(false);
        setOpen(false)

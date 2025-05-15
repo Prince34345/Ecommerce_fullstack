@@ -16,7 +16,6 @@ import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { useOrigin } from "@/hooks/use-origin";
-import ImageUpload from "@/components/ui/image-upload";
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -36,7 +35,6 @@ type ColorFormValues = z.infer<typeof formSchema>;
 export const ColorForm: React.FC<ColorFormProps> = ({intialData}: ColorFormProps) => {
   const params = useParams()
   const router = useRouter();
-  const origin = useOrigin();
 
   const [ open, setOpen ] = useState(false) ;
   const [ loading, setLoading] = useState(false);
@@ -80,6 +78,7 @@ export const ColorForm: React.FC<ColorFormProps> = ({intialData}: ColorFormProps
        router.push(`/${params.storeId}/colors`);
        toast.success('Color deleted.');
     } catch (error) {
+        console.log(error);
         toast.error('Make sure you removed all product using this color first')
     } finally {
        setLoading(false);

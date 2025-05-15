@@ -103,6 +103,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       router.push(`/${params.storeId}/products`);
       toast.success('Product deleted.');
     } catch (error) {
+      console.log(error);
       toast.error('Make sure you removed all categries. using this Product first')
     } finally {
       setLoading(false);
