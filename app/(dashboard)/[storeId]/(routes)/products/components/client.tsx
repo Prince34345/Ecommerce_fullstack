@@ -8,7 +8,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { ProductColumn, columns } from './columns';
 import { DataTable } from '@/components/ui/data-table';
 import { ApiList } from '@/components/ui/api-list';
-import { useState } from 'react';
 
 interface ProductClientProps {
   data: ProductColumn[]

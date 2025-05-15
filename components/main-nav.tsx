@@ -3,8 +3,6 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils"
 import { useParams, usePathname } from "next/navigation";
-import { Clipboard as ClipBoardIcon, PaperclipIcon, LayoutList, Settings, SquareArrowOutUpRight, Palette, Package2 }from "lucide-react";
-import {motion} from 'framer-motion'
 
 
 export function MainNav({
