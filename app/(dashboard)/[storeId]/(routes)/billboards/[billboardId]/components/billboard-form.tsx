@@ -15,7 +15,6 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { useOrigin } from "@/hooks/use-origin";
 import ImageUpload from "@/components/ui/image-upload";
 
 const formSchema = z.object({
@@ -86,6 +85,7 @@ export const BillBoardform: React.FC<BillBoardFormProps> = ({intialData}: BillBo
        router.push(`/${params.storeId}/billboards`);
        toast.success('Billboard deleted.');
     } catch (error) {
+        console.log(error);
         toast.error('Make sure you removed all categries. using this billboard first')
     } finally {
        setLoading(false);
