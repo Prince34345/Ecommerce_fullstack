@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState, useCallback } from "react";
+import { useCallback } from "react";
 import { Button } from "./button";
 import { ImagePlus, Trash } from "lucide-react";
 import Image from "next/image";
-import { CldUploadWidget } from 'next-cloudinary';
+import { CldUploadWidget, CloudinaryUploadWidgetInfo, CloudinaryUploadWidgetResults} from 'next-cloudinary';
 
 interface ImageUploadProps {
   disabled?: boolean;
@@ -16,15 +16,15 @@ interface ImageUploadProps {
 const ImageUpload: React.FC<ImageUploadProps> = ({
   disabled, onChange, onRemove, value
 }) => {
-  const handleUploadComplete = useCallback((results: any) => {
-    console.log("handleUploadComplete", results)
-    const uploadedUrls = results?.info?.files?.map((file: any)=> file.uploadInfo.secure_url) || [];
+  const handleUploadComplete = useCallback((results: CloudinaryUploadWidgetResults) => {
+    if (typeof results.info === 'object' && results.info !== null && 'files' in results.info) {
+      const files = (results.info as CloudinaryUploadWidgetInfo).files as Array<{ uploadInfo: { secure_url: string }}>
+      const uploadedUrls = files?.map((file: { uploadInfo: { secure_url: string; }; }) => file.uploadInfo.secure_url) || [];
 
-    const merged = Array.from(new Set([...value, ...uploadedUrls]));
-    console.log("merged", merged)
-
-    const imageObjects = merged.map(url => ({ url }));
-    onChange(imageObjects);
+      const merged = Array.from(new Set([...value, ...uploadedUrls]));
+      const imageObjects = merged.map(url => ({ url }));
+      onChange(imageObjects);
+    }
   }, [value, onChange]);
 
   console.log("values", value)

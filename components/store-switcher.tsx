@@ -16,7 +16,7 @@ interface StoreSwitcherProps extends PopoverTriggerProps {
     items: Store[]
 }
 
-export default function StoreSwitcher ({className, items = []}: StoreSwitcherProps) {
+export default function StoreSwitcher ({items = []}: StoreSwitcherProps) {
   const storeModal = useStoreModal();
   const params = useParams()
   const router = useRouter();
