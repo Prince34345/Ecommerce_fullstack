@@ -4,9 +4,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(
     req: Request,
-    {params} : {params: {storeId: string}}
+    {params} : {params: Promise<{storeId: string}>}
 ) {
      try {
+           const id = (await params).storeId;
            const {userId} = await auth();
            const body = await req.json()
            const { 
@@ -42,13 +43,13 @@ export async function POST(
             return new NextResponse('Name is Required', {status: 400});
            }
           
-           if (!params.storeId) {
+           if (!id) {
               return new NextResponse('Store ID is required', {status: 400})
            }
 
            const storeByUserId = await prismadb.store.findFirst({
             where: {
-                id: params.storeId,
+                id,
                 userId
             }
            })
@@ -65,7 +66,7 @@ export async function POST(
                    categoryId,
                    colorId,
                    sizeId,
-                   storeId: params.storeId,
+                   storeId: id,
                    images: {
                      createMany:  {
                         data: [...images.map((image : {url: string}) => image)]
@@ -82,22 +83,23 @@ export async function POST(
 
 export async function GET(
      req: Request,
-    {params} : {params: {storeId: string}}
+    {params} : {params: Promise<{storeId: string}>}
 ) {
      try {
+           const id = (await params).storeId;
            const {searchParams} = new URL(req.url);
            const categoryId = searchParams.get('categoryId') || undefined;
            const sizeId = searchParams.get('sizeId') || undefined;
            const colorId = searchParams.get('colorId') || undefined;
            const isFeatured = searchParams.get("isFeatured");
 
-           if (!params.storeId) {
+           if (!id) {
               return new NextResponse('Store Id is required', {status: 400})
            }
 
            const products = await prismadb.product.findMany({
                where: {
-                  storeId: params.storeId,
+                  storeId: id,
                   categoryId,
                   colorId,
                   sizeId,

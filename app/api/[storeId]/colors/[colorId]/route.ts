@@ -4,16 +4,17 @@ import { NextResponse } from "next/server";
 
 export async function GET(
     req: Request,
-   {params} : {params: {colorId: string}}
+   {params} : {params: Promise<{colorId: string}>}
 ) {
+    const {colorId} = await params;
     try {
-          if (!params.colorId) {
+          if (!colorId) {
              return new NextResponse('Color Id is required', {status: 400})
           }
 
           const color = await prismadb.colors.findUnique({
               where: {
-                  id: params.colorId,
+                  id: colorId,
               }
            })
            return NextResponse.json(color);
@@ -75,20 +76,21 @@ export async function PATCH(
 
 export async function DELETE(
      req: Request,
-    {params} : {params: {storeId: string, colorId: string}}
+    {params} : {params: Promise<{storeId: string, colorId: string}>}
 ) {
+    const {storeId, colorId} = await params;
      try {
            const {userId} = await auth();
            if (!userId) {
               return new NextResponse('unauthenticated', {status: 401});
            }
-           if (!params.colorId) {
+           if (colorId) {
               return new NextResponse('Color Id is required', {status: 400})
            }
 
            const storeByUserId = await prismadb.store.findFirst({
             where: {
-                id: params.storeId,
+                id: storeId,
                 userId
             }
            })
@@ -100,7 +102,7 @@ export async function DELETE(
 
            const color = await prismadb.colors.deleteMany({
                where: {
-                   id: params.colorId,
+                   id:colorId,
                }
             })
             return NextResponse.json(color);

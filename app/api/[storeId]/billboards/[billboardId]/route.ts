@@ -4,16 +4,17 @@ import { NextResponse } from "next/server";
 
 export async function GET(
     req: Request,
-   {params} : {params: {billboardId: string}}
+   {params} : {params: Promise<{billboardId: string}>}
 ) {
+    const id = (await params).billboardId;
     try {
-          if (!params.billboardId) {
+          if (!id) {
              return new NextResponse('BillBoard Id is required', {status: 400})
           }
 
           const billboard = await prismadb.billboard.findUnique({
               where: {
-                  id: params.billboardId,
+                  id,
               }
            })
            return NextResponse.json(billboard);
@@ -75,20 +76,21 @@ export async function PATCH(
 
 export async function DELETE(
      req: Request,
-    {params} : {params: {storeId: string, billboardId: string}}
+    {params} : {params: Promise<{storeId: string, billboardId: string}>}
 ) {
+     const {storeId, billboardId} = await params;
      try {
            const {userId} = await auth();
            if (!userId) {
               return new NextResponse('unauthenticated', {status: 401});
            }
-           if (!params.billboardId) {
+           if (!billboardId) {
               return new NextResponse('BillBoard Id is required', {status: 400})
            }
 
            const storeByUserId = await prismadb.store.findFirst({
             where: {
-                id: params.storeId,
+                id: storeId,
                 userId
             }
            })
@@ -100,7 +102,7 @@ export async function DELETE(
 
            const billboard = await prismadb.billboard.deleteMany({
                where: {
-                   id: params.billboardId,
+                   id: billboardId,
                }
             })
             return NextResponse.json(billboard);
