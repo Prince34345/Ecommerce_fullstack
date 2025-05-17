@@ -6,10 +6,11 @@ import {format} from 'date-fns'
 
 const BillboardPage = async ({
     params
-}:  { params: {storeId: string} }) => {
+}:  { params: Promise<{storeId: string}>}) => {
+    const id = (await params).storeId
     const billboards = await prismadb.billboard.findMany({
         where: {
-            storeId: params.storeId
+            storeId: id
         },
         orderBy: {
             createdAt: "desc"

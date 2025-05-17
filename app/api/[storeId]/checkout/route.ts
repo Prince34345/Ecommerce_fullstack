@@ -14,9 +14,10 @@ export async function OPTIONS() {
        return NextResponse.json({}, {headers: corsHeaders});        
 }
 
-export async function POST(req: Request, {params}: {params: {storeId: string}}) {
+export async function POST(req: Request, {params}: {params: Promise<{storeId: string}>}) {
     
     const {productIds} = await req.json();
+    const id = (await params).storeId;
 
     if (!productIds || productIds.length === 0) {
          return new NextResponse("Product ids are required.", {status: 400})
@@ -46,7 +47,7 @@ export async function POST(req: Request, {params}: {params: {storeId: string}}) 
            })
     const Order = await prismadb.order.create({
         data: {
-            storeId: params.storeId,
+            storeId: id,
             isPaid: false,
             orderItems: {
                 create: productIds.map((productId: string) => ({

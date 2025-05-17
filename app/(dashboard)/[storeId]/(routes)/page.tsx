@@ -10,15 +10,15 @@ import { formatter } from "@/lib/utils"
 import { CreditCardIcon, DollarSign, Package } from "lucide-react"
 
 interface DashboardPageProps {
-    params: {storeId: string}
+    params: Promise<{storeId: string}>
 }
 
 const DashboardPage: React.FC<DashboardPageProps> = async ({params}) => {
-  const TotalRevenue = await getTotalRevenue(params.storeId)
-  const SalesCount = await getSalesCount(params.storeId) ;
-  const stockCount = await getStockCount(params.storeId);
-  const graphRevenue = await getGraphRevenue(params.storeId);
-
+  const id = (await params).storeId
+  const TotalRevenue = await getTotalRevenue(id)
+  const SalesCount = await getSalesCount(id) ;
+  const stockCount = await getStockCount(id);
+  const graphRevenue = await getGraphRevenue(id);
 
   return (
       <div className="flex-col">

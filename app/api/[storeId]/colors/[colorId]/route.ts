@@ -25,9 +25,11 @@ export async function GET(
 
 export async function PATCH(
     req: Request,
-    {params} : {params: {storeId: string, colorId: string}}
+    {params} : {params: Promise<{storeId: string, colorId: string}>}
 ) {
      try {
+           const storeId = (await params).storeId;
+           const colorId = (await params).colorId;
            const {userId} = await auth();
            const body = await req.json()
            const {name, value} = body;
@@ -40,13 +42,13 @@ export async function PATCH(
            if (!value) {
             return new NextResponse('Value is Required', {status: 400});
            }
-           if (!params.colorId) {
+           if (!colorId) {
               return new NextResponse('Color Id is required', {status: 400})
            }
  
            const storeByUserId = await prismadb.store.findFirst({
             where: {
-                id: params.storeId,
+                id: storeId,
                 userId
             }
            })
@@ -57,7 +59,7 @@ export async function PATCH(
 
            const color = await prismadb.colors.updateMany({
                where: {
-                   id: params.colorId,
+                   id: colorId,
                },
                data: {
                    name,

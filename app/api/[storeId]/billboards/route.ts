@@ -4,8 +4,9 @@ import { NextResponse } from "next/server";
 
 export async function POST(
     req: Request,
-    {params} : {params: {storeId: string}}
+    {params} : {params: Promise<{storeId: string}>}
 ) {
+     const id = (await params).storeId;
      try {
            const {userId} = await auth();
            const body = await req.json()
@@ -19,13 +20,13 @@ export async function POST(
            if (!imageUrl) {
               return new NextResponse('Image URL is Required', {status: 400});
            }
-           if (!params.storeId) {
+           if (!id) {
               return new NextResponse('Store ID is required', {status: 400})
            }
 
            const storeByUserId = await prismadb.store.findFirst({
             where: {
-                id: params.storeId,
+                id,
                 userId
             }
            })
@@ -37,7 +38,7 @@ export async function POST(
                data: {
                    label,
                    imageUrl,
-                   storeId: params.storeId
+                   storeId: id
                }
             })
             return NextResponse.json(billboard);
@@ -49,16 +50,17 @@ export async function POST(
 
 export async function GET(
      req: Request,
-    {params} : {params: {storeId: string}}
+    {params} : {params: Promise<{storeId: string}>}
 ) {
      try {
-           if (!params.storeId) {
+           const id = (await params).storeId
+           if (!id) {
               return new NextResponse('Store Id is required', {status: 400})
            }
 
            const billboards = await prismadb.billboard.findMany({
                where: {
-                  storeId: params.storeId
+                  storeId: id
                }
             })
             return NextResponse.json(billboards);

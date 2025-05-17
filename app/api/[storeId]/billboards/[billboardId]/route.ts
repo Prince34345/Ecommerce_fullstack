@@ -25,9 +25,11 @@ export async function GET(
 
 export async function PATCH(
     req: Request,
-    {params} : {params: {storeId: string, billboardId: string}}
+    {params} : {params: Promise<{storeId: string, billboardId: string}>}
 ) {
      try {
+           const billboardId = (await params).billboardId;
+           const storeId = (await params).storeId;
            const {userId} = await auth();
            const body = await req.json()
            const {label, imageUrl} = body;
@@ -40,13 +42,13 @@ export async function PATCH(
            if (!imageUrl) {
             return new NextResponse('Image Url is Required', {status: 400});
            }
-           if (!params.billboardId) {
+           if (!billboardId) {
               return new NextResponse('BillBoard Id is required', {status: 400})
            }
  
            const storeByUserId = await prismadb.store.findFirst({
             where: {
-                id: params.storeId,
+                id: billboardId,
                 userId
             }
            })
@@ -57,7 +59,7 @@ export async function PATCH(
 
            const billboard = await prismadb.billboard.updateMany({
                where: {
-                   id: params.billboardId,
+                   id: storeId,
                },
                data: {
                    label,
