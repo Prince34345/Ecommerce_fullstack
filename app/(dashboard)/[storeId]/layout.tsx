@@ -27,7 +27,7 @@ export default async function DashboardLayout({
     }
     return (
         <>
-          <div className="overflow-scroll">
+          <div className="">
               <Navbar/>
               {children}
           </div>
