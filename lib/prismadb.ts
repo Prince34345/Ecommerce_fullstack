@@ -10,4 +10,9 @@ const prismadb = globalThis.prisma || new PrismaClient({
     log: ["error", "info", "query", "warn"]
 });
 
+if (process.env.NODE_ENV !== 'production') {
+    globalThis.prisma = prismadb;
+}
+
+
 export default prismadb;
